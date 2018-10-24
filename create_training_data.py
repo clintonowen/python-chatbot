@@ -21,17 +21,21 @@ for timeframe in timeframes:
     test_done = False   # For when we're done building testing data
 
     while cur_length == limit:
+        # Get the first/next 5000 valid entries
         df = pd.read_sql('SELECT * FROM parent_reply WHERE unix > {} AND parent NOT NULL AND score > 0 ORDER BY unix ASC LIMIT {}'.format(last_unix, limit), connection)
+        # Set "starting point" for next chunk as end of current one
         last_unix = df.tail(1)['unix'].values[0]
+        # Update the cur_length to break the while loop when reaching the end
         cur_length = len(df)
-        # Create some test files using only the first chunk of data
+        # Create test files using only the first chunk of data
         if not test_done:
             writeTxt('{}.test.from'.format(timeframe), 'parent')
             writeTxt('{}.test.to'.format(timeframe), 'comment')
             test_done = True
+        # Write to training files for everything else
         else:
             writeTxt('{}.train.from'.format(timeframe), 'parent')
             writeTxt('{}.train.to'.format(timeframe), 'comment')
         counter += 1
-        if counter % 20 == 0:
+        if counter % 10 == 0:
             print(counter*limit,'rows completed so far')
