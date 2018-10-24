@@ -1,2 +1,4 @@
 chatdata/
 db/
+train/
+.DS_Store

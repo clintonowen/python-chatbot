@@ -7,7 +7,7 @@ import pandas as pd
 timeframes = ['2018-09']
 
 def writeTxt(filename, key):
-    with open(filename, 'a', encoding='utf8') as f:
+    with open('./train/{}'.format(filename), 'a', encoding='utf8') as f:
         for content in df[key].values:
             f.write(content+'\n')
 
@@ -21,16 +21,17 @@ for timeframe in timeframes:
     test_done = False   # For when we're done building testing data
 
     while cur_length == limit:
-        df = pd.read_sql("SELECT * FROM parent_reply WHERE unix > {} AND parent NOT NULL AND score > 0 ORDER BY unix ASC LIMIT {}".format(last_unix, limit), connection)
+        df = pd.read_sql('SELECT * FROM parent_reply WHERE unix > {} AND parent NOT NULL AND score > 0 ORDER BY unix ASC LIMIT {}'.format(last_unix, limit), connection)
         last_unix = df.tail(1)['unix'].values[0]
         cur_length = len(df)
+        # Create some test files using only the first chunk of data
         if not test_done:
-            writeTxt('test.from', 'parent')
-            writeTxt('test.to', 'comment')
+            writeTxt('{}.test.from'.format(timeframe), 'parent')
+            writeTxt('{}.test.to'.format(timeframe), 'comment')
             test_done = True
         else:
-            writeTxt('train.from', 'parent')
-            writeTxt('train.to', 'comment')
+            writeTxt('{}.train.from'.format(timeframe), 'parent')
+            writeTxt('{}.train.to'.format(timeframe), 'comment')
         counter += 1
         if counter % 20 == 0:
             print(counter*limit,'rows completed so far')

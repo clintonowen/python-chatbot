@@ -21,8 +21,9 @@ python-chatbot/
 │   └── 2018
 │       └── RC_2019-09
 ├── db/
-├── utils/
-├── chatbot_database.py
+├── train/
+├── count_rows.py
+├── create_database.py
 ├── create_training_data.py
 └── README.md
 ```
