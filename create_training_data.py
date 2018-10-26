@@ -7,7 +7,7 @@ import pandas as pd
 timeframes = ['2018-09']
 
 def writeTxt(filename, key):
-    with open('./train/{}'.format(filename), 'a', encoding='utf8') as f:
+    with open('./nmt-chatbot/new_data/{}'.format(filename), 'a', encoding='utf8') as f:
         for content in df[key].values:
             f.write(content+'\n')
 
@@ -29,13 +29,13 @@ for timeframe in timeframes:
         cur_length = len(df)
         # Create test files using only the first chunk of data
         if not test_done:
-            writeTxt('{}.test.from'.format(timeframe), 'parent')
-            writeTxt('{}.test.to'.format(timeframe), 'comment')
+            writeTxt('test.from', 'parent')
+            writeTxt('test.to', 'comment')
             test_done = True
         # Write to training files for everything else
         else:
-            writeTxt('{}.train.from'.format(timeframe), 'parent')
-            writeTxt('{}.train.to'.format(timeframe), 'comment')
+            writeTxt('train.from', 'parent')
+            writeTxt('train.to', 'comment')
         counter += 1
         if counter % 10 == 0:
             print(counter*limit,'rows completed so far')
